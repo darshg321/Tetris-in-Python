@@ -7,11 +7,11 @@ screen = pygame.display.set_mode([1280, 720])
 
 WHITE = (255, 255, 255)
 
-def drawStyleRect(surface):
-    pygame.draw.rect(surface, (30, 29, 45), (400, 300, 880, 90), 0)
-    
-    for i in range(4):
-        pygame.draw.rect(surface, (0, 0, 0), (400-i, 300-i, 880, 90), 1)
+btn_img = pygame.image.load("assets\images\\button.png")
+btn_img = pygame.transform.scale(btn_img, (300, 90))
+
+def get_font(size):
+    return pygame.font.Font("assets\\font\hundin.ttf", size)
 
 class Button():
 	def __init__(self, image, pos, text_input, font, base_color, hovering_color):
@@ -46,6 +46,8 @@ class Button():
 def game_loop():
     pygame.display.set_caption("Tetris")
     
+    
+    
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -70,16 +72,33 @@ def main_menu():
     bg = pygame.image.load(f'assets\images\\bg{bgnum}.png')
     bg = pygame.transform.scale(bg, (1280, 720))
     
+    title_font = pygame.font.Font("assets\\font\\hundin.ttf", 100)
+    title = title_font.render('Tetris!', True, WHITE)
+    title_rect = title.get_rect(center= (640, 100))
+    
     while True:
         screen.blit(bg, (0,0))
+        screen.blit(title, title_rect)
         
-        # pygame.draw.rect(screen, (30, 29, 45), (400, 300, 880, 70))
+        MENU_MOUSE_POS = pygame.mouse.get_pos()
         
-        drawStyleRect(screen)
+        play_btn = Button(image=btn_img, pos=(640, 300), text_input="Play",
+                            font=get_font(65), base_color="White", hovering_color="#00d9ff")
+        quit_btn = Button(image=btn_img, pos=(640, 500), text_input="Quit",
+                            font=get_font(65), base_color="White", hovering_color="#00d9ff")
+        
+        for button in [play_btn, quit_btn]:
+            button.changeColor(MENU_MOUSE_POS)
+            button.update(screen)
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit(0)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if play_btn.checkForInput(MENU_MOUSE_POS):
+                    game_loop()
+                if quit_btn.checkForInput(MENU_MOUSE_POS):
+                    sys.exit(0)
         
         pygame.display.update()
         fps.tick(60)
