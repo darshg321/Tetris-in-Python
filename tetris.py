@@ -46,13 +46,20 @@ class Button():
 def game_loop():
     pygame.display.set_caption("Tetris")
     
-    
+    bgnum = random.randint(1, 5)
+    bg = pygame.image.load(f'assets\images\\bg{bgnum}.png')
+    bg = pygame.transform.scale(bg, (1280, 720))
+    grid = pygame.image.load(f'assets\images\\grid.png')
+    grid = pygame.transform.scale(grid, (350, 720))
     
     while True:
+        screen.blit(bg, (0,0))
+        screen.blit(grid, (465, 0))
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit(0)
-        pygame.display.update
+        pygame.display.update()
         fps.tick(60)
     
 def game_over():
@@ -62,7 +69,7 @@ def game_over():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit(0)
-        pygame.display.update
+        pygame.display.update()
         fps.tick(60)
 
 def main_menu():
